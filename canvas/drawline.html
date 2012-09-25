@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="ko-KR">
+<head>
+	<meta charset="UTF-8">
+	<title>그림판</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="util.js"></script>
+	<style type="text/css">
+		#clr div{
+			width:20px;
+			height:20px;
+			float:left;
+			cursor:pointer;
+		}
+	</style>
+	
+	<script type="text/javascript">
+		var context;
+		var isDraw = false;
+		var drawIndex = 0;
+		var lineObject = [];
+		var drawState = 0;
+		var pointList = new ArrayList();
+		var thisColor = "black";
+		var thisLineWidth = 1;
+		
+		window.onload = function(){
+			var canvas = document.getElementById("myCanvas");
+			context = canvas.getContext("2d");
+			
+			$("canvas").attr({"width":"500","height":"500","style":"background:#dddddd"});
+
+			$("canvas").bind("mousedown" , function(event){
+				console.log("mousedown");
+				if(isDraw == false){
+					isDraw = true;
+					var point = new Point(event.offsetX , event.offsetY , thisLineWidth , thisColor , true);
+					pointList.add(point);
+				}
+			});
+
+			$("canvas").bind("mousemove" , function(event){
+				console.log("mousemove");
+				if(isDraw){
+					var point = new Point(event.offsetX , event.offsetY , thisLineWidth , thisColor , false);
+					pointList.add(point);
+					drawScreen();
+				}
+			});
+
+			$("canvas").bind("mouseup" , function(event){
+				console.log("mouseup");
+				isDraw = false;
+			});
+			
+			$("#clr > div").click(function(){
+				console.log("click");
+				thisColor = $(this).css("background-color");
+			});
+			
+		}
+
+		
+		function drawScreen()
+		{
+			if(pointList.size() > 2)
+			{
+				for(var i = 0 ; i < pointList.size() ; i++)
+				{
+					if(pointList.get(i).isStart){
+						context.beginPath();
+						context.moveTo(pointList.get(i).x , pointList.get(i).y);
+					}else
+					{
+						context.lineWidth = pointList.get(i).width;
+						context.lineTo(pointList.get(i).x , pointList.get(i).y);
+						context.strokeStyle = pointList.get(i).color;
+						context.stroke();
+					}
+				}
+				
+			}
+			
+		}
+		
+		
+		Point = function(x , y , width , color , isStart)
+		{
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.color = color;
+			this.isStart = isStart;
+		}
+	</script>
+</head>
+<body>
+	<div id="canvasDiv">
+		<canvas id="myCanvas"></canvas>
+	</div>
+	<div id="clr">
+		<div style="background-color:black"></div>	
+		<div style="background-color:red"></div>	
+		<div style="background-color:green"></div>	
+		<div style="background-color:blue"></div>	
+	</div>
+</body>
+</html>
