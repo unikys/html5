@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="ko-KR">
+<head>
+	<meta charset="UTF-8">
+	<title>그림판</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="util.js"></script>
+	<style type="text/css">
+		#clr div{
+			width:20px;
+			height:20px;
+			float:left;
+			cursor:pointer;
+		}
+	</style>
+	
+	<script type="text/javascript">
+		var context;
+		var isDraw = false;
+		var drawIndex = 0;
+		var lineObject = [];
+		var drawState = 0;
+		var pointList = new ArrayList();
+		var thisColor = "black";
+		var thisLineWidth = 1;
+		var currentDrawType = 1;
+		var startX = 0;
+		var startY = 0;
+		var backgroundBufferURL;
+
+		
+		window.onload = function(){
+			var canvas = document.getElementById("myCanvas");
+			context = canvas.getContext("2d");
+			
+			$("canvas").attr({"width":"500","height":"500","style":"background:#dddddd"});
+
+			$("canvas").bind("mousedown" , function(event){
+				console.log("mousedown");
+				if(isDraw == false){
+					isDraw = true;
+					context.beginPath();
+					context.moveTo(event.offsetX , event.offsetY);
+					startX = event.offsetX;
+					startY = event.offsetY;
+					
+					if(currentDrawType != 1)
+					{
+						backgroundBufferURL = canvas.toDataURL();
+						canvas.style.backgroundImage = 'url(' + backgroundBufferURL + ')'
+					}
+					
+//					alert(backgroundBuffer);
+
+//					var point = new Point(event.offsetX , event.offsetY , thisLineWidth , thisColor , true);
+//					pointList.add(point);
+				}
+			});
+
+			$("canvas").bind("mousemove" , function(event){
+				console.log("mousemove");
+				if(isDraw){
+					context.lineWidth = thisLineWidth;
+					context.strokeStyle = thisColor;
+					if(currentDrawType == 1)
+					{
+						context.lineTo(event.offsetX , event.offsetY);
+					}else if(currentDrawType == 2)
+					{
+						context.clearRect(0, 0, canvas.width, canvas.height);
+						context.strokeRect(startX , startY , event.offsetX - startX , event.offsetY - startY);
+					}else if(currentDrawType == 3)
+					{
+						context.beginPath();
+						context.clearRect(0, 0, canvas.width, canvas.height);
+						context.closePath();
+						context.arc(startX + (event.offsetX - startX) / 2, startY + (event.offsetY - startY) / 2, Math.abs(event.offsetX - startX) / 2, 0, Math.PI*2, true); 
+					}
+					context.stroke();
+				}
+			});
+
+			$("canvas").bind("mouseup" , function(event){
+				console.log("mouseup");
+				isDraw = false;
+
+				if(currentDrawType == 1)
+					return;
+				
+				var imageData = new Image();
+				imageData.onload = function()
+				{
+					context.drawImage(imageData , 0 , 0);
+					if(currentDrawType == 2)
+					{
+						context.strokeRect(startX , startY , event.offsetX - startX , event.offsetY - startY);
+					}else if(currentDrawType == 1)
+					{
+						context.arc(startX + (event.offsetX - startX) / 2, startY + (event.offsetY - startY) / 2, Math.abs(event.offsetX - startX) / 2, 0, Math.PI*2, true); 
+					}
+					context.stroke();
+				}
+				imageData.src = backgroundBufferURL;
+			});
+			
+			$("#clr > div").click(function(){
+				console.log("click");
+				thisColor = $(this).css("background-color");
+			});
+			
+			$("#lineWidth").change(function(){
+				thisLineWidth = $("#lineWidth option:selected").val();
+			});
+
+			$("#drawType").change(function(){
+				currentDrawType = $("#drawType option:selected").val();
+			});
+		}
+
+		
+		function drawScreen()
+		{
+			if(pointList.size() > 2)
+			{
+				for(var i = 0 ; i < pointList.size() ; i++)
+				{
+					if(pointList.get(i).isStart){
+						context.beginPath();
+						context.moveTo(pointList.get(i).x , pointList.get(i).y);
+					}else
+					{
+						context.lineWidth = pointList.get(i).width;
+						context.lineTo(pointList.get(i).x , pointList.get(i).y);
+						context.strokeStyle = pointList.get(i).color;
+						context.stroke();
+					}
+				}
+				
+			}
+			
+		}
+		
+		
+		Point = function(x , y , width , color , isStart)
+		{
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.color = color;
+			this.isStart = isStart;
+		}
+		
+		
+		
+	</script>
+</head>
+<body>
+	<div id="canvasDiv">
+		<canvas id="myCanvas"></canvas>
+	</div>
+	<div id="clr">
+		<div style="background-color:black"></div>	
+		<div style="background-color:red"></div>	
+		<div style="background-color:green"></div>	
+		<div style="background-color:blue"></div>	
+		<select name="lineWidth" id="lineWidth">
+			<option value="1">1</option>
+			<option value="3">3</option>
+			<option value="5">5</option>
+			<option value="10">10</option>
+		</select>
+		<select name="drawType" id="drawType">
+			<option value="1">Line</option>
+			<option value="2">Rectangle</option>
+			<option value="3">Circle</option>
+		</select>
+	</div>
+</body>
+</html>
