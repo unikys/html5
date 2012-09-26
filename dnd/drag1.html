@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<style>
+	#boxA, #boxB {
+	   float:left;padding:10px;margin:10px;
+	   -moz-user-select:none;
+	}
+	#boxA { background-color: #6633FF; width:75px; 
+	height:75px;  }
+	#boxB { background-color: #FF6699; width:150px; 
+	height:150px; }
+	</style>
+	<script type="text/javascript">
+		function dragStart(ev) {
+		   	document.getElementById("msg").innerHTML +="onDragStart->";
+		 	ev.dataTransfer.setData("Text", ev.target.id);
+		   	return true;
+		}
+		function dragEnter(ev) {
+			document.getElementById("msg").innerHTML += "onDragEnter->";
+		   return true;
+		}
+		function dragOver(ev) {
+			document.getElementById("msg").innerHTML += "onDragOver->";
+			return false;
+		}
+		function dragDrop(ev) {
+			document.getElementById("msg").innerHTML += "onDragDrop->";
+		   var src = ev.dataTransfer.getData("Text");
+		   ev.target.appendChild(document.getElementById(src));
+		   //드랍대상에 드랍을 허용한다.
+		   ev.preventDefault();
+		   //이벤트 전파를 하지 않는다.
+		   ev.stopPropagation();
+		   return false;
+		}
+	</script>
+	</head>
+	<body>
+		
+		<h2>Drag and drop HTML5 demo</h2>
+		<div>Try to move the purple box into the pink box.</div>
+		
+		<div id="boxA" draggable="true" 
+			ondragstart="return dragStart(event)">
+		   <p>Drag Me</p>
+		</div>
+		<div id="boxB" ondragenter="return dragEnter(event)" 
+			 ondrop="return dragDrop(event)" 
+			 ondragover="return dragOver(event)">Dustbin</div>
+		<div id="msg"></div>
+	</body>
+</html>
+

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html lang="ko-KR">
+<head>
+	<meta charset="UTF-8">
+	<title>Web SQL Database Demo</title>
+	<script>
+		var db = openDatabase("EmployeeDB" , "1.0" , "Employee Database" , 1024*1024);
+
+		db.transaction(function(tx){
+			tx.executeSql("create table if not exists Employee ("+
+					"employee_id integer primary key autoincrement , "+ 
+					"name,age integer)");
+		},function(error){
+			alert("실패 : " + JSON.stringify(error));
+		},function(){
+			alert("성공");
+		});
+		
+		var name = "안철수";
+		var age = 50;
+		
+		db.transaction(function(tx){
+			tx.executeSql("insert into Employee (name , age) values (?,?)", [name,age],
+				function(tx,rs){
+					alert("사원 ID [" + rs.insertId + "] 행이 저장");
+				}
+			);
+		});
+		
+		var selected = 1;
+		
+		db.transaction(function(tx){
+			tx.executeSql("delete from Employee where employee_id=?", [selected],
+				function(tx,rs){
+					alert(rs.rowsAffected + " 행이 삭제 되었습니다.");
+				}
+			);
+		});
+		
+		
+		db.transaction(function(tx){
+			tx.executeSql("select * from Employee ", [],
+				function(tx,rs){
+					var str = "";
+					var rows = rs.rows;
+					
+					for(var i = 0 ; i < rows.length ; i++){
+						var row = rows.item(i);
+						str += row.employee_id + " , " + row.name + " , " + row.age + "\n";
+					}
+					alert(str);
+				}
+			);
+		});
+
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

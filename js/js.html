@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang="ko-KR">
+<head>
+	<meta charset="UTF-8">
+	<title>javascript</title>
+	<script>
+/*		var array = new Array('a' , 'b');
+		alert(array.join(''));
+		array.push('c');
+		array[3] = 'd';
+		alert(array.join(''));
+		alert(array.length);*/
+		
+		var Student = function(korean , english){
+			this.korean = korean;
+			this.english = english;
+/* 			this.getSum = function(){
+				return this.korean + this.english;
+			}
+ */		}
+		
+		Student.prototype.getSum = function()
+		{
+			return this.korean + this.english;
+		}
+		
+		var s1 = new Student(90,80);
+		alert(s1.getSum());
+
+		var s2 = new Student(100,90);
+		alert(s2.getSum());
+		
+		
+	</script>
+</head>
+<body>
+		
+</body>
+</html>

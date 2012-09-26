@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+	</head>
+
+<body>
+	<h1>datalist 는 opera, firefox 에서 지원</h1>
+
+	<h3>datalist</h3>
+	<input type="text" name="test01" 
+		placeholder="autocomplete=off" />
+	<br>
+	<input type="text" name="test01" list="fruit" 
+	autocomplete="on"
+		placeholder="autocomplete=on" autofocus />
+	<datalist id="fruit">
+		<option value="apple" label="사과">
+		<option value="grape" label="포도">
+		<option value="orange" label="오렌지">
+		<option value="banana" label="바나나">
+	</datalist>
+</body>
+</html>
+
+

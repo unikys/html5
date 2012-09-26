@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>세션 스토리지 뷰어</title> 
+	
+	
+	
+</head> 
+ 
+<body onload="showAll()"> 
+<h1>세션 스토리지 뷰어</h1>
+키 : <input type="text" id="k"> 값 : <input type="text" id="v">
+<button onclick="save()" >저장</button>
+<button onclick="remove()" >삭제</button>
+<button onclick="window.open(location.href);" >윈도우 생성</button>
+<hr>
+<select id="entries" size="5" onchange="onEntrySelected()"></select>
+<button onclick="showAll()" >다시표시</button>
+
+<script type="text/javascript"> 
+		var key = document.getElementById("k");
+		var value = document.getElementById("v");
+		var entries = document.getElementById("entries");
+		function showAll(){
+			entries.innerHTML = "";
+			for(var i=0;i<sessionStorage.length;i++){
+				var k = sessionStorage.key(i);
+				entries.options[entries.options.length] = new Option(k + " : " + sessionStorage[k],k);
+			}
+		
+		}
+
+		function save(){
+			sessionStorage[key.value] = value.value;
+			showAll();
+		}
+		function remove(){
+			delete sessionStorage[key.value];
+			showAll();
+		}
+		function onEntrySelected(){
+			var selectedOption = entries.options[entries.selectedIndex];
+			key.value = selectedOption.value;
+			value.value = sessionStorage[selectedOption.value];
+		}
+	</script> 
+</body>
+</html>

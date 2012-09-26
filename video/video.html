@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html lang="ko-KR">
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5 Video</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+	<style>
+		#videoplayer {
+			width: 600px;
+			height: 400px;
+			position: absolute;
+		}
+		
+		#videowrap {
+			width: 600px;
+			height: 400px;
+		}
+	</style>
+	<script>
+		function playOrPauseVideo()
+		{
+			var video = document.getElementById("video");
+			if(video.paused)
+			{
+				if(video.src == "")
+				{
+					var videoUrl = document.getElementById("videoUrl").value;
+					
+					video.src = videoUrl;
+					video.load();
+				}
+				
+				video.play()
+				$("#playButton").val("일시정지");
+			}else
+			{
+				video.pause();
+				$("#playButton").val("재생");
+			}
+			video.addEventListener("timeupdate" , function(){
+				var timeDisplay = $("#time");
+				timeDisplay.html((Math.round(video.currentTime * 100) / 100) + "/" + video.duration);
+			});
+		}
+		
+		function showValue(val)
+		{
+			$("#video").width(600 * val);
+			$("#video").height(400 * val);
+			$("#videoplayer").width(600 * val);
+			$("#videoplayer").height(400 * val);
+			
+			var left = 600/2 - 600*val/2;
+			var top = 400/2 - 400*val/2;
+			
+			$("#videoplayer").css("left" , left+"px");
+			$("#videoplayer").css("top" , top+"px");
+		}
+		
+		function changeVolumeValue(val)
+		{
+			var video = getElementById("video");
+			video.volume = val;
+		}
+	</script>
+</head>
+<body>
+	<div id="videowrap">
+		<div id="videoplayer">
+			<video width="600" height="400" id="video">
+					</video>
+		</div>
+	</div>
+	<div>
+			동영상 URL <input type="text" id="videoUrl" value="test.mp4"/>
+			<input type="button" id="playButton" onclick="playOrPauseVideo()" value="재생"/>
+			크기<input type="range" min="0" max="1" value="1" step="0.001" onchange="showValue(this.value)"/>
+			볼륨<input type="range" min="0" max="1" value="1" step="0.001" onchange="changeVolumeValue(this.value)"/>
+			<div id="time"></div>
+	</div>	
+</body>
+</html>

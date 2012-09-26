@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<script>
+	function resCalc(){
+		numA=document.getElementById("num_a").value;
+		numB=document.getElementById("num_b").value;
+		document.getElementById("result").value=
+			Number(numA)+Number(numB);
+		document.getElementById("test").value=
+			Number(numA)+Number(numB);
+	}
+	</script>
+	</head>
+<body>
+	<p>Simple calculator using the output element:</p>
+	<form action="test.jsp" method="post">
+	 <input id="num_a" name="num_a" /> +
+	 <input id="num_b" name="num_b" /> =
+	 <output id="result" name="result" onforminput=
+	 "value=num_a.valueAsNumber+num_b.valueAsNumber"></output>
+			
+	</form>
+	
+
+</body>
+</html>
+
+
+
+
+
+
+

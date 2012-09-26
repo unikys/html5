@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html manifest="cache.manifest"> 
+<head> 
+	<meta charset="utf-8"> 
+	<title>hello</title> 
+	<link href="common.css" rel="stylesheet" type="text/css">
+	<script src="cache.js"></script>
+	<script> 
+	
+		applicationCache.addEventListener('updateready', function(e) {
+			if (applicationCache.status == applicationCache.UPDATEREADY) {
+				applicationCache.swapCache();
+				if(confirm('업데이트를 하시겠습니까?')){
+					
+					location.reload();
+				}
+			}
+		}, false);
+		
+		window.onload = function(){
+			
+			setInterval(function(){
+				window.applicationCache.update();
+			},10000);
+
+			
+		};
+		
+	</script> 
+</head> 
+ 
+<body > 
+<h1>애플리케이션 캐시</h1>
+<p>Hello</p>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
